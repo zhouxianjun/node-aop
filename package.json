@@ -12,5 +12,9 @@
     "aop"
   ],
   "author": "Alone (Gary)",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "memory-cache": "^0.1.6",
+    "minimatch": "^3.0.3"
+  }
 }
