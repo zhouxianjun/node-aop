@@ -3,7 +3,8 @@
  */
 const Aspect = require('../lib');
 Aspect.load = module.exports = class Hello {
-    say() {
+    say(name) {
         console.log('hello');
+        return name;
     }
 };

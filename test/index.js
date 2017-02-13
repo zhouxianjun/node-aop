@@ -8,8 +8,9 @@ aspect.before(() => {
     console.log('before', [...arguments].slice(0, 1));
 }).around((target, bean, args) => {
     console.log('around');
-    Reflect.apply(target, bean, args);
+    return Reflect.apply(target, bean, args);
 }).aop();
 
 const Hello = require('./Hello');
-new Hello().say();
+let name = new Hello().say('Alone');
+console.log(name);
