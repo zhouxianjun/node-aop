@@ -3,9 +3,13 @@
  */
 'use strict';
 const Aspect = require('../lib');
-const Hello = require('./Hello');
 let aspect = new Aspect('E:/**/node-aop/**/*.js');
-/*aspect.before(() => {
-    console.log('before');
-}).aop();*/
-//new Hello().say();
+aspect.before(() => {
+    console.log('before', [...arguments].slice(0, 1));
+}).around((target, bean, args) => {
+    console.log('around');
+    Reflect.apply(target, bean, args);
+}).aop();
+
+const Hello = require('./Hello');
+new Hello().say();
