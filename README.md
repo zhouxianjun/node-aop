@@ -3,23 +3,39 @@
 
 [Node.js](http://nodejs.org).
 
-[![NPM](https://nodei.co/npm/simple-net.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/simple-net/)
+[![NPM](https://nodei.co/npm/node-aspect?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/node-aspect/)
 
-npm install node-aop
+npm install node-aspect
 
 ---
 
 ## 如何使用
 
 ```javascript
+module.exexports = class Hello {
+    say(name) {
+        console.log(`hello ${name}`);
+        return name;
+    }
+}
 //import
-const Aspect = require('node-aop');
+const Aspect = require('node-aspect');
 // create Aspect
-let aspect = new Aspect(path, classes, name);
+let aspect = new Aspect('/**/test/**/*.js', `classes`, `name`);
 //set [before, after, error, around] handler
-aspect.before(handler);
+aspect.before((name, aspect) => {
+    console.log(`before: ${name}`);
+});
 //start aop
 aspect.aop();
+
+const Hello = require('./Hello');
+console.log(new Hello().say('Alone'));
+
+// output:
+before: Alone
+hello Alone
+Alone
 ```
 
 ## API
@@ -41,7 +57,7 @@ Set handler.
   * `after` - {function(`arguments` + `this Aspect` + `result`)} last arg is this Aspect.
   * `error` - {function(`arguments` + `this Aspect` + `error`)} last arg is this Aspect.
   * `around` - {function(`arguments`)} last arg is this Aspect.
-  
+
 Return this
 
 ### aop()

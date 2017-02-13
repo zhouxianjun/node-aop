@@ -1,7 +1,7 @@
 {
-  "name": "node-aop",
+  "name": "node-aspect",
   "version": "1.0.0",
-  "description": "nodejs aop",
+  "description": "nodejs aop aspect",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -9,7 +9,8 @@
   "keywords": [
     "node",
     "js",
-    "aop"
+    "aop",
+    "aspect"
   ],
   "author": "Alone (Gary)",
   "license": "ISC",
