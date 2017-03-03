@@ -2,7 +2,7 @@
  * Created by Alone on 2017/2/9.
  */
 'use strict';
-const Match = require('./Match');
+const Match = require('./lib/Match');
 const assert = require('assert');
 const cache = require('memory-cache');
 const uuid = require('uuid');
