@@ -54,8 +54,8 @@ Set handler.
 * `handler` - (Function) aop handler function:
 
   * `before` - {function(`arguments`)} last arg is this Aspect.
-  * `after` - {function(`arguments` + `this Aspect` + `result`)} last arg is this Aspect.
-  * `error` - {function(`arguments` + `this Aspect` + `error`)} last arg is this Aspect.
+  * `after` - {function(`arguments` + `this Aspect` + `ctx` + `result`)} last arg is this Aspect.
+  * `error` - {function(`arguments` + `this Aspect` + `ctx` + `error`)} last arg is this Aspect.
   * `around` - {function(`arguments`)} last arg is this Aspect.
 
 Return this

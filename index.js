@@ -22,7 +22,7 @@ function getModule(module) {
     let result = null;
     Reflect.ownKeys(require.cache).forEach(key => {
         let m = require.cache[key];
-        if (m.exports == module) {
+        if (m.exports === module) {
             result = m;
         }
     }, this);
@@ -89,23 +89,24 @@ const Aspect = class Aspect {
         let aspect = this;
         return new Proxy(target, {
             apply(target, bean, args) {
+                let ctx = {};
                 if (around && around.size) {
                     let result;
                     for (let item of around.values()) {
-                        result = Reflect.apply(item, bean, [target, bean, args.concat(aspect, result)]);
+                        result = Reflect.apply(item, bean, [target, bean, args.concat(aspect, ctx, result)]);
                     }
                     return result;
                 }
                 if (before && before.size) {
                     for (let item of before.values()) {
-                        Reflect.apply(item, bean, args.concat(aspect));
+                        Reflect.apply(item, bean, args.concat(aspect, ctx));
                     }
                 }
                 let d = domain.create();
                 d.on('error', err => {
                     if (error && error.size) {
                         for (let item of error.values()) {
-                            Reflect.apply(item, bean, args.concat(aspect, err));
+                            Reflect.apply(item, bean, args.concat(aspect, ctx, err));
                         }
                     }
                 });
@@ -113,7 +114,7 @@ const Aspect = class Aspect {
                     let result = Reflect.apply(...arguments);
                     if (after && after.size) {
                         for (let item of after.values()) {
-                            Reflect.apply(item, bean, args.concat(aspect, result));
+                            Reflect.apply(item, bean, args.concat(aspect, ctx, result));
                         }
                     }
                     return result;
@@ -126,7 +127,7 @@ const Aspect = class Aspect {
         if (!bean || !bean.prototype) {
             new Error('bean has be Object.')
         }
-        if (bean instanceof Aspect || bean == Aspect) {
+        if (bean instanceof Aspect || bean === Aspect) {
             return;
         }
         let classes = this[Symbol.for('class')];
@@ -134,10 +135,11 @@ const Aspect = class Aspect {
         if (!classes || Match.isClass(bean, classes)) {
             Reflect.ownKeys(bean.prototype).forEach(method => {
                 let descriptor = Reflect.getOwnPropertyDescriptor(bean.prototype, method);
-                if (method != 'constructor' &&
+                if (method !== 'constructor' &&
                     descriptor.get === undefined &&
                     descriptor.set === undefined &&
-                    typeof descriptor.value == 'function') {
+                    typeof descriptor.value === 'function' &&
+                    Match.name(method, name)) {
 
                     let target = bean.prototype[method];
                     let advisor = this[Symbol.for('advisor')];

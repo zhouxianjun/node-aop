@@ -1,6 +1,6 @@
 {
   "name": "node-aspect",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "nodejs aop aspect",
   "main": "index.js",
   "scripts": {
