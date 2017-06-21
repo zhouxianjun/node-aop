@@ -93,7 +93,7 @@ const Aspect = class Aspect {
                 if (around && around.size) {
                     let result;
                     for (let item of around.values()) {
-                        result = Reflect.apply(item, bean, [target, bean, args.concat(aspect, ctx, result)]);
+                        result = Reflect.apply(item, bean, [target, bean, aspect, ctx, result, args]);
                     }
                     return result;
                 }
