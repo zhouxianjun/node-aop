@@ -8,6 +8,7 @@ const cache = require('memory-cache');
 const uuid = require('uuid');
 const domain = require('domain');
 const Module = require('module');
+const exclude = ['constructor', 'length', 'name', 'prototype'];
 const allAspect = Symbol();
 function addAspect(aspect) {
     if (aspect && aspect instanceof Aspect && aspect.isAop) {
@@ -133,24 +134,29 @@ const Aspect = class Aspect {
         let classes = this[Symbol.for('class')];
         let name = this[Symbol.for('name')];
         if (!classes || Match.isClass(bean, classes)) {
-            Reflect.ownKeys(bean.prototype).forEach(method => {
-                let descriptor = Reflect.getOwnPropertyDescriptor(bean.prototype, method);
-                if (method !== 'constructor' &&
-                    descriptor.get === undefined &&
-                    descriptor.set === undefined &&
-                    typeof descriptor.value === 'function' &&
-                    Match.name(method, name)) {
-
-                    let target = bean.prototype[method];
-                    let advisor = this[Symbol.for('advisor')];
-                    if (!advisor.has(target)) {
-                        console.info(`Aop: ${bean} method:${method}`);
-                        Reflect.set(bean.prototype, method, this.newProxy(target));
-                        advisor.add(target);
-                    }
-                }
-            }, this);
+            this.proxy(bean);
+            this.proxy(bean.prototype);
         }
+    }
+
+    proxy(bean) {
+        Reflect.ownKeys(bean).forEach(method => {
+            let descriptor = Reflect.getOwnPropertyDescriptor(bean, method);
+            if (!exclude.includes(method) &&
+                descriptor.get === undefined &&
+                descriptor.set === undefined &&
+                typeof descriptor.value === 'function' &&
+                (!name || Match.name(method, name))) {
+
+                let target = bean[method];
+                let advisor = this[Symbol.for('advisor')];
+                if (!advisor.has(target)) {
+                    console.info(`Aop: ${bean} method:${method}`);
+                    Reflect.set(bean, method, this.newProxy(target));
+                    advisor.add(target);
+                }
+            }
+        }, this);
     }
 
     advisorModule(m) {
