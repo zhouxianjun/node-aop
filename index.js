@@ -134,12 +134,12 @@ const Aspect = class Aspect {
         let classes = this[Symbol.for('class')];
         let name = this[Symbol.for('name')];
         if (!classes || Match.isClass(bean, classes)) {
-            this.proxy(bean);
-            this.proxy(bean.prototype);
+            this.proxy(bean, name);
+            this.proxy(bean.prototype, name);
         }
     }
 
-    proxy(bean) {
+    proxy(bean, name) {
         Reflect.ownKeys(bean).forEach(method => {
             let descriptor = Reflect.getOwnPropertyDescriptor(bean, method);
             if (!exclude.includes(method) &&
